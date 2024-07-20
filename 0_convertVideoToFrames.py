@@ -25,7 +25,7 @@ def extract_frames(video_file):
 
         # Only extract frames at the desired frame rate
         if frame_count % int(cap.get(5) / frame_rate) == 0:
-            output_file = f"{output_directory}/frame_{frame_count}.jpg"
+            output_file = f"{output_directory}/{frame_count}.jpg"
             cv2.imwrite(output_file, frame)
             print(f"Frame {frame_count} has been extracted and saved as {output_file}")
 
@@ -34,6 +34,5 @@ def extract_frames(video_file):
 
 
 if __name__ == "__main__":
-    video_file = r"video.mp4"  # Replace with your video's name
-
+    video_file = r"m6_motorway_demo.mp4"  # Replace with your video's name
     extract_frames(video_file)

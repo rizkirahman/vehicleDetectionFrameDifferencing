@@ -1,44 +1,44 @@
-# import the necessary packages
+# Import the necessary packages
 import cv2
-import imutils
 import os
 import re
 import numpy as np
-from os.path import isfile, join
 import matplotlib.pyplot as plt
 
-frames_dir = 'video_frames/'
-
+# Frames directory
+frames_dir = 'm6_motorway_demo_frames/'
 col_frames = os.listdir(frames_dir)
 
-# sort file names
+# Sort file names
 col_frames.sort(key=lambda f: int(re.sub('\D', '', f)))
 
-# empty list to store the frames
-col_images=[]
+# Empty list to store the frames
+col_images = []
 
 for i in col_frames:
-    # read the frames
-    img = cv2.imread(frames_dir+i)
-    # append the frames to the list
+    # Read the frames
+    img = cv2.imread(frames_dir + i)
+    # Append the frames to the list
     col_images.append(img)
 
-i = 13
+# Frame number start to compare
+i = 20
 
-# convert the frames to grayscale
+# Convert the frames to grayscale
 grayA = cv2.cvtColor(col_images[i], cv2.COLOR_BGR2GRAY)
-grayB = cv2.cvtColor(col_images[i+1], cv2.COLOR_BGR2GRAY)
+grayB = cv2.cvtColor(col_images[i + 1], cv2.COLOR_BGR2GRAY)
 
+# Differentiate the image
 diff_image = cv2.absdiff(grayB, grayA)
 
-# perform image thresholding
-ret, thresh = cv2.threshold(diff_image, 20, 255, cv2.THRESH_BINARY)
+# Perform image thresholding
+ret, thresh = cv2.threshold(diff_image, 10, 255, cv2.THRESH_BINARY)
 
-# apply image dilation
-kernel = np.ones((5,5),np.uint8)
-eroded = cv2.erode(thresh,kernel,iterations = 1)
-dilated = cv2.dilate(eroded,kernel,iterations = 3)
+# Apply image erosion -> dilation (opening)
+kernel = np.ones((2, 2), np.uint8)
+eroded = cv2.erode(thresh, kernel, iterations=2)
+dilated = cv2.dilate(eroded, kernel, iterations=15)
 
-# plot dilated image
-plt.imshow(dilated, cmap = 'gray')
+# Plot processed image
+plt.imshow(dilated, cmap='gray')
 plt.show()

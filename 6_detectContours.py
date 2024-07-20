@@ -1,60 +1,81 @@
-# import the necessary packages
+# Import the necessary packages
 import cv2
-import imutils
 import os
 import re
 import numpy as np
-from os.path import isfile, join
 import matplotlib.pyplot as plt
 
-frames_dir = 'frames/'
-
+# Frames directory
+frames_dir = 'm6_motorway_demo_frames/'
 col_frames = os.listdir(frames_dir)
 
-# sort file names
+# Sort file names
 col_frames.sort(key=lambda f: int(re.sub('\D', '', f)))
 
-# empty list to store the frames
-col_images=[]
+# Empty list to store the frames
+col_images = []
 
 for i in col_frames:
-    # read the frames
-    img = cv2.imread(frames_dir+i)
-    # append the frames to the list
+    # Read the frames
+    img = cv2.imread(frames_dir + i)
+    # Append the frames to the list
     col_images.append(img)
 
-i = 15
+# Frame number start to compare
+i = 20
 
-# convert the frames to grayscale
+# Convert the frames to grayscale
 grayA = cv2.cvtColor(col_images[i], cv2.COLOR_BGR2GRAY)
-grayB = cv2.cvtColor(col_images[i+1], cv2.COLOR_BGR2GRAY)
+grayB = cv2.cvtColor(col_images[i + 1], cv2.COLOR_BGR2GRAY)
 
+# Differentiate the image
 diff_image = cv2.absdiff(grayB, grayA)
 
-# perform image thresholding
-ret, thresh = cv2.threshold(diff_image, 50, 255, cv2.THRESH_BINARY)
+# Perform image thresholding
+ret, thresh = cv2.threshold(diff_image, 10, 255, cv2.THRESH_BINARY)
 
-# apply image erosion and dilation
-kernel = np.ones((5,5),np.uint8)
-#eroded = cv2.erode(thresh,kernel,iterations = 2)
-dilated = cv2.dilate(thresh,kernel,iterations = 1)
+# Apply image erosion -> dilation (opening)
+kernel = np.ones((2, 2), np.uint8)
+eroded = cv2.erode(thresh, kernel, iterations=2)
+dilated = cv2.dilate(eroded, kernel, iterations=15)
 
-# find contours
-contours, hierarchy = cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+imgCopy = cv2.cvtColor(col_images[20].copy(), cv2.COLOR_BGR2RGB)
+
+# Find contours
+contours, hierarchy = cv2.findContours(dilated.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 valid_cntrs = []
+for i,contour in enumerate(contours):
+    x, y, w, h = cv2.boundingRect(contour)
+    if (x <= 1280) & (y >= 450) & (cv2.contourArea(contour) >= 500):
+        # Draw the rectangle
+        cv2.rectangle(imgCopy, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-for i,cntr in enumerate(contours):
-    x,y,w,h = cv2.boundingRect(cntr)
-    if (x <= 200) & (y >= 80) & (cv2.contourArea(cntr) >= 25):
-        valid_cntrs.append(cntr)
+        # Calculate the center coordinates of the top edge
+        top_center_x = x + w // 2
+        top_center_y = y
 
-# count of discovered contours
-len(valid_cntrs)
+        # Choose the font, scale, color, and thickness
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.7
+        font_color = (0, 255, 0)
+        thickness = 1
 
-dmy = col_images[13].copy()
+        # Prepare the text with the top center coordinates
+        coordinates_text = f"({top_center_x}, {top_center_y})"
 
-cv2.drawContours(dmy, valid_cntrs, -1, (127,200,0), 5)
-cv2.line(dmy, (0, 80), (256, 80), (100, 255, 255))
-plt.imshow(dmy)
+        # Define the position for the text (slightly above the top center of the rectangle)
+        text_position = (
+        top_center_x - (cv2.getTextSize(coordinates_text, font, font_scale, 1)[0][0] // 2),
+        top_center_y - 10)
+
+        # Put the text on the image
+        cv2.putText(imgCopy, coordinates_text, text_position, font, font_scale, font_color, thickness)
+
+        # Append the contour to valid_cntrs
+        valid_cntrs.append(contour)
+
+# Draw a line
+cv2.line(imgCopy, (0, 450),(1280,450),(0, 255, 255), 1)
+plt.imshow(imgCopy)
 plt.show()
