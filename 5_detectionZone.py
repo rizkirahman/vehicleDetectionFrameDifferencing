@@ -37,7 +37,7 @@ ret, thresh = cv2.threshold(diff_image, 10, 255, cv2.THRESH_BINARY)
 # Apply image erosion -> dilation (opening)
 kernel = np.ones((2, 2), np.uint8)
 eroded = cv2.erode(thresh, kernel, iterations=2)
-dilated = cv2.dilate(eroded, kernel, iterations=15)
+dilated = cv2.dilate(eroded, kernel, iterations=10)
 
 # Draw a line
 cv2.line(dilated, (0, 450),(1280,450),(100, 0, 0), 3)
