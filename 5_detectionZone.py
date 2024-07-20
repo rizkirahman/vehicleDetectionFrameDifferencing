@@ -34,7 +34,7 @@ diff_image = cv2.absdiff(grayB, grayA)
 # Perform image thresholding
 ret, thresh = cv2.threshold(diff_image, 10, 255, cv2.THRESH_BINARY)
 
-# Apply image erosion -> dilation (opening)
+# Apply morphological transformations
 kernel = np.ones((2, 2), np.uint8)
 eroded = cv2.erode(thresh, kernel, iterations=2)
 dilated = cv2.dilate(eroded, kernel, iterations=10)
