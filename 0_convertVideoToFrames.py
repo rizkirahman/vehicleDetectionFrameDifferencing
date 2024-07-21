@@ -1,15 +1,16 @@
 import cv2
 import os
 
+
 # Function to extract frames from a video until reaching the desired frame count
-def extract_frames(video_file):
-    cap = cv2.VideoCapture(video_file)
+def extract_frames(video):
+    cap = cv2.VideoCapture(video)
 
     frame_rate = 25  # Desired frame rate (x frames every 1 second)
     frame_count = 0
 
     # Get the video file's name without extension
-    video_name = os.path.splitext(os.path.basename(video_file))[0]
+    video_name = os.path.splitext(os.path.basename(video))[0]
 
     # Create an output folder with a name corresponding to the video
     output_directory = f"{video_name}_frames"
