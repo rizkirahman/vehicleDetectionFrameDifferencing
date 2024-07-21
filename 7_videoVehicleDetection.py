@@ -56,7 +56,7 @@ for i in range(len(col_images)-1):
     valid_cntrs = []
     for j,contour in enumerate(contours):
         x, y, w, h = cv2.boundingRect(contour)
-        if (x <= 1280) & (y >= 450) & (cv2.contourArea(contour) >= 4000):
+        if (x <= 1280) & (y >= 450) & (cv2.contourArea(contour) >= 2500):
             # Draw the rectangle
             cv2.rectangle(imgCopy, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
