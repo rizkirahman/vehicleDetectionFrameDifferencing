@@ -39,9 +39,29 @@ kernel = np.ones((2, 2), np.uint8)
 eroded = cv2.erode(thresh, kernel, iterations=2)
 dilated = cv2.dilate(eroded, kernel, iterations=10)
 
-# Draw a line
-cv2.line(dilated, (0, 450),(1280,450),(100, 0, 0), 3)
+# Copy the image
+imgCopy = cv2.cvtColor(col_images[i].copy(), cv2.COLOR_BGR2RGB)
 
-# Plot processed image
-plt.imshow(dilated)
+# Find contours
+contours, hierarchy = cv2.findContours(dilated.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+# Choose the font, scale, color, and thickness
+font = cv2.FONT_HERSHEY_SIMPLEX
+font_scale = 0.7
+font_color = (0, 255, 0)
+thickness = 1
+
+valid_cntrs = []
+for i,contour in enumerate(contours):
+    x, y, w, h = cv2.boundingRect(contour)
+    if (x <= 1280) & (y >= 450) & (cv2.contourArea(contour) >= 4000):
+        # Append the contour to valid_cntrs
+        valid_cntrs.append(contour)
+
+# Draw the contour
+cv2.drawContours(imgCopy, valid_cntrs, -1, (127, 200, 0), 2)
+
+# Draw a line
+cv2.line(imgCopy, (0, 450),(1280,450),(0, 255, 255), 1)
+plt.imshow(imgCopy)
 plt.show()
