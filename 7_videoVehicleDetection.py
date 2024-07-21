@@ -12,6 +12,9 @@ col_frames = os.listdir(frames_dir)
 # Directory to save the output frames
 pathIn = "output_frames/"
 
+# Filter out files that do not contain any digits
+col_frames = [f for f in col_frames if re.search('\d', f)]
+
 # Sort file names
 col_frames.sort(key=lambda f: int(re.sub('\D', '', f)))
 

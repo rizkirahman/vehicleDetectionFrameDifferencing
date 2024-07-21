@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 frames_dir = 'm6_motorway_demo_frames/'
 col_frames = os.listdir(frames_dir)
 
+# Filter out files that do not contain any digits
+col_frames = [f for f in col_frames if re.search('\d', f)]
+
 # Sort file names
 col_frames.sort(key=lambda f: int(re.sub('\D', '', f)))
 

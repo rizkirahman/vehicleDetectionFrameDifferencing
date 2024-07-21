@@ -5,7 +5,7 @@ import os
 def extract_frames(video_file):
     cap = cv2.VideoCapture(video_file)
 
-    frame_rate = 15  # Desired frame rate (x frames every 1 second)
+    frame_rate = 25  # Desired frame rate (x frames every 1 second)
     frame_count = 0
 
     # Get the video file's name without extension
