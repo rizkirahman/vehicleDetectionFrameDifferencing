@@ -83,6 +83,9 @@ num_vehicles = len(valid_cntrs)
 vehicle_count_text = f"Vehicles Detected: {num_vehicles}"
 cv2.putText(imgCopy, vehicle_count_text, (20, 40), font, 1, (0, 0, 0), 2)
 
+# Draw the contour
+#cv2.drawContours(imgCopy, valid_cntrs, -1, (127, 200, 0), 2)
+
 # Draw a line
 cv2.line(imgCopy, (0, 450),(1280,450),(0, 255, 255), 1)
 plt.imshow(imgCopy)

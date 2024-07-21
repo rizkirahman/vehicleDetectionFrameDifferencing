@@ -81,6 +81,9 @@ for i in range(len(col_images)-1):
     # Count the number of valid contours
     num_vehicles = len(valid_cntrs)
 
+    # Draw the contour
+    #cv2.drawContours(imgCopy, valid_cntrs, -1, (127, 200, 0), 2)
+
     # Draw a line
     cv2.line(imgCopy, (0, 450), (1280, 450), (0, 255, 255), 1)
 
